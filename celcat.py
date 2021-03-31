@@ -9,8 +9,8 @@ from urllib.parse import parse_qs
 class Course:
     def __init__(self, data):
         self.uid = data['id']
-        self.start = arrow.get(data['start']).replace(tzinfo='Europe/Paris')
-        self.end = arrow.get(data['end']).replace(tzinfo='Europe/Paris')
+        self.start = arrow.get(data['start'], tzinfo='Europe/Paris')
+        self.end = arrow.get(data['end'], tzinfo='Europe/Paris')
         self.category = data['eventCategory']
         d = [html.unescape(s) for s in data['description'].split('\r\n') if s]
         self.name = d[2]
