@@ -17,7 +17,7 @@ class Celcat(commands.Cog):
     async def edt(self, ctx):
         c = Calendar()
         c.fetch()
-        await ctx.send(c.next_course())
+        await ctx.send(f'```\n{c.next_course()}\n```')
 
 class Chiffer(commands.Cog):
     regex = re.compile(r'\w*crypt(?!ed\b)(?!ing\b)\w+', re.IGNORECASE)
