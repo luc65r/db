@@ -15,6 +15,7 @@ class Celcat(commands.Cog):
 
     @commands.command()
     async def edt(self, ctx):
+        logging.info(f'{ctx.author} asked for edt')
         c = Calendar()
         c.fetch()
         await ctx.send(f'```\n{c.next_course()}\n```')
@@ -32,6 +33,7 @@ class Chiffer(commands.Cog):
 
         match = self.regex.search(message.content)
         if match:
+            logging.info(f'{message.author} a dit "encrypt*"')
             await message.reply(
                 f'« {match.group()} » n’est pas français : https://chiffrer.info/',
                 mention_author=True
