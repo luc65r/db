@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 import asyncio
 import logging
+import arrow
 import re
 
 from celcat import Calendar
@@ -14,11 +15,24 @@ class Celcat(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def edt(self, ctx):
+    async def edt(self, ctx, date=None):
         logging.info(f'{ctx.author} asked for edt')
-        c = Calendar()
-        c.fetch()
-        await ctx.send(f'```\n{c.next_course()}\n```')
+        if date is None:
+            c = Calendar()
+            c.fetch()
+            await ctx.send(f'```\n{c.next_course()}\n```')
+        else:
+            try:
+                d = arrow.get(date, locale='fr', tzinfo='Europe/Paris')
+            except arrow.parser.ParserError:
+                await ctx.send(f'La date est invalide')
+                return
+
+            c = Calendar(d)
+            c.fetch()
+
+            s = '\n\n'.join([str(e) for e in c.courses if e.start.date() == d.date()])
+            await ctx.send(f'```\n{s}\n```')
 
 class Chiffer(commands.Cog):
     regex = re.compile(r'\w*crypt(?!ed\b)(?!ing\b)\w+', re.IGNORECASE)
