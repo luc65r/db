@@ -33,7 +33,7 @@ class Chiffer(commands.Cog):
         match = self.regex.search(message.content)
         if match:
             await message.reply(
-                '« {} » n’est pas français : https://chiffrer.info/'.format(match.group()),
+                f'« {match.group()} » n’est pas français : https://chiffrer.info/',
                 mention_author=True
             )
 
@@ -42,7 +42,7 @@ bot = commands.Bot(command_prefix=':')
 
 @bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(bot))
+    logging.info(f'We have logged in as {bot.user}')
 
 bot.add_cog(Chiffer(bot))
 bot.add_cog(Celcat(bot))
