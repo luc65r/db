@@ -20,7 +20,7 @@ class Celcat(commands.Cog):
         await ctx.send(c.next_course())
 
 class Chiffer(commands.Cog):
-    regex = re.compile(r'\w*crypt(é|e|age)\w*', re.IGNORECASE)
+    regex = re.compile(r'\w*crypt(?!ed\b)(?!ing\b)\w+', re.IGNORECASE)
 
     def __init__(self, bot):
         self.bot = bot
