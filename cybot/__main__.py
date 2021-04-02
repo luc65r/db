@@ -36,7 +36,7 @@ class Celcat(commands.Cog[commands.Context]):
             await ctx.send(f'```\n{s}\n```')
 
 class Chiffer(commands.Cog[commands.Context]):
-    regex = re.compile(r'\w*crypt(?!ed\b)(?!ing\b)\w+', re.IGNORECASE)
+    regex = re.compile(r'\b(\w*en)?crypt(?!ed\b)(?!ing\b)\w+', re.IGNORECASE)
 
     def __init__(self, bot: commands.Bot[commands.Context]) -> None:
         self.bot = bot
@@ -48,7 +48,7 @@ class Chiffer(commands.Cog[commands.Context]):
 
         match = self.regex.search(message.content)
         if match:
-            logging.info(f'{message.author} a dit "encrypt*"')
+            logging.info(f'{message.author} a dit "crypt*"')
             await message.reply(
                 f'« {match.group()} » n’est pas français : https://chiffrer.info/',
                 mention_author=True
