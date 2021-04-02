@@ -9,11 +9,10 @@
     in {
       devShell = pkgs.mkShell {
         nativeBuildInputs = with pkgs; [
-          (python3.withPackages (p: [
-            p.discordpy
-            p.requests
-            p.ics
-          ]))
+          (poetry2nix.mkPoetryEnv {
+            projectDir = ./.;
+            python = python39;
+          })
         ];
       };
     });

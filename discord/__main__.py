@@ -53,7 +53,7 @@ class Chiffer(commands.Cog):
                 mention_author=True
             )
 
-            
+
 bot = commands.Bot(command_prefix=':')
 
 @bot.event
