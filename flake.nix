@@ -11,8 +11,8 @@
         nativeBuildInputs = with pkgs; [
           (poetry2nix.mkPoetryEnv {
             projectDir = ./.;
-            python = python39;
           })
+          python3Packages.poetry
         ];
       };
     });
