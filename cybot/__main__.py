@@ -54,6 +54,15 @@ class Chiffer(commands.Cog[commands.Context]):
                 mention_author=True
             )
 
+class Amimir(commands.Cog[commands.Context]):
+    def __init__(self, bot: commands.Bot[commands.Context]) -> None:
+        self.bot = bot
+
+    @commands.command()
+    async def amimir(self, ctx: commands.Context) -> None:
+        logging.info(f'{ctx.author} amimir')
+        await ctx.send("https://tenor.com/view/a-mimir-gif-18858209")
+
 
 bot = commands.Bot(command_prefix=':')
 
@@ -63,4 +72,5 @@ async def on_ready() -> None:
 
 bot.add_cog(Chiffer(bot))
 bot.add_cog(Celcat(bot))
+bot.add_cog(Amimir(bot))
 bot.run(cfg['discord']['token'])
