@@ -11,32 +11,34 @@ from cybot.celcat import Calendar
 
 logging.basicConfig(level=logging.INFO)
 
+
 class Celcat(commands.Cog[commands.Context]):
     def __init__(self, bot: commands.Bot[commands.Context]) -> None:
         self.bot = bot
 
     @commands.command()
     async def edt(self, ctx: commands.Context, date: Optional[str] = None) -> None:
-        logging.info(f'{ctx.author} asked for edt')
+        logging.info(f"{ctx.author} asked for edt")
         if date is None:
             c = Calendar()
             c.fetch()
-            await ctx.send(f'```\n{c.next_course()}\n```')
+            await ctx.send(f"```\n{c.next_course()}\n```")
         else:
             try:
-                d = arrow.get(date, locale='fr', tzinfo='Europe/Paris')
+                d = arrow.get(date, locale="fr", tzinfo="Europe/Paris")
             except arrow.parser.ParserError:
-                await ctx.send(f'La date est invalide')
+                await ctx.send(f"La date est invalide")
                 return
 
             c = Calendar(d)
             c.fetch()
 
-            s = '\n\n'.join([str(e) for e in c.courses if e.start.date() == d.date()])
-            await ctx.send(f'```\n{s}\n```')
+            s = "\n\n".join([str(e) for e in c.courses if e.start.date() == d.date()])
+            await ctx.send(f"```\n{s}\n```")
+
 
 class Chiffer(commands.Cog[commands.Context]):
-    regex = re.compile(r'\b(\w*en)?crypt(?!ed\b)(?!ing\b)\w+', re.IGNORECASE)
+    regex = re.compile(r"\b(\w*en)?crypt(?!ed\b)(?!ing\b)\w+", re.IGNORECASE)
 
     def __init__(self, bot: commands.Bot[commands.Context]) -> None:
         self.bot = bot
@@ -50,9 +52,10 @@ class Chiffer(commands.Cog[commands.Context]):
         if match:
             logging.info(f'{message.author} a dit "crypt*"')
             await message.reply(
-                f'« {match.group()} » n’est pas français : https://chiffrer.info/',
-                mention_author=True
+                f"« {match.group()} » n’est pas français : https://chiffrer.info/",
+                mention_author=True,
             )
+
 
 class Amimir(commands.Cog[commands.Context]):
     def __init__(self, bot: commands.Bot[commands.Context]) -> None:
@@ -60,17 +63,19 @@ class Amimir(commands.Cog[commands.Context]):
 
     @commands.command()
     async def amimir(self, ctx: commands.Context) -> None:
-        logging.info(f'{ctx.author} amimir')
+        logging.info(f"{ctx.author} amimir")
         await ctx.send("https://tenor.com/view/a-mimir-gif-18858209")
 
 
-bot = commands.Bot(command_prefix=':')
+bot = commands.Bot(command_prefix=":")
+
 
 @bot.event
 async def on_ready() -> None:
-    logging.info(f'We have logged in as {bot.user}')
+    logging.info(f"We have logged in as {bot.user}")
+
 
 bot.add_cog(Chiffer(bot))
 bot.add_cog(Celcat(bot))
 bot.add_cog(Amimir(bot))
-bot.run(cfg['discord']['token'])
+bot.run(cfg["discord"]["token"])
