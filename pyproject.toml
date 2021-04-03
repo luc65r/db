@@ -1,8 +1,12 @@
 [tool.poetry]
 name = "cybot"
 version = "0.1.0"
-description = ""
+description = "A shitty Discord bot"
 authors = ["Lucas Ransan <lucas@ransan.tk>"]
+license = "MIT"
+
+[tool.poetry.scripts]
+cybot = "cybot:__main__"
 
 [tool.poetry.dependencies]
 python = "^3.8"
