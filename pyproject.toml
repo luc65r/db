@@ -6,7 +6,7 @@ authors = ["Lucas Ransan <lucas@ransan.tk>"]
 license = "MIT"
 
 [tool.poetry.scripts]
-cybot = "cybot:__main__"
+cybot = "cybot.__main__:__main__"
 
 [tool.poetry.dependencies]
 python = "^3.8"
