@@ -17,11 +17,11 @@ class Celcat(commands.Cog[commands.Context]):
         self.bot = bot
 
     @commands.command()
-    async def edt(self, ctx: commands.Context, date: Optional[str] = None) -> None:
+    async def edt(self, ctx: commands.Context, group: int = 1, date: Optional[str] = None) -> None:
         logging.info(f"{ctx.author} asked for edt")
         if date is None:
             c = Calendar()
-            c.fetch()
+            c.fetch(group)
             await ctx.send(f"```\n{c.next_course()}\n```")
         else:
             try:
@@ -31,7 +31,7 @@ class Celcat(commands.Cog[commands.Context]):
                 return
 
             c = Calendar(d)
-            c.fetch()
+            c.fetch(group)
 
             s = "\n\n".join([str(e) for e in c.courses if e.start.date() == d.date()])
             await ctx.send(f"```\n{s}\n```")

@@ -49,7 +49,7 @@ class Calendar:
         self.end = self.start.shift(weeks=+1) if end is None else end
         self.courses: List[Course] = []
 
-    def fetch(self) -> None:
+    def fetch(self, group: int) -> None:
         s = requests.Session()
         rlt = s.get("https://services-web.u-cergy.fr/calendar/LdapLogin")
         if srvt := re.search(
@@ -68,7 +68,7 @@ class Calendar:
                 "__RequestVerificationToken": rvt,
             },
         )
-        fid = parse_qs(rlogin.url)["FederationIds"][0]
+        fid = cfg["celcat"][f"group{group}"]
         rcd = s.post(
             "https://services-web.u-cergy.fr/calendar/Home/GetCalendarData",
             data={
