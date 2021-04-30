@@ -8,6 +8,7 @@ import re
 from typing import Optional
 
 from cybot.celcat import Calendar
+from cybot.svg_calendar import SvgCalendar, CalendarTheme
 
 logging.basicConfig(level=logging.INFO)
 
@@ -17,12 +18,12 @@ class Celcat(commands.Cog[commands.Context]):
         self.bot = bot
 
     @commands.command()
-    async def edt(self, ctx: commands.Context, group: int = 1, date: Optional[str] = None) -> None:
+    async def edt(
+        self, ctx: commands.Context, group: int = 1, date: Optional[str] = None
+    ) -> None:
         logging.info(f"{ctx.author} asked for edt")
         if date is None:
-            c = Calendar()
-            c.fetch(group)
-            await ctx.send(f"```\n{c.next_course()}\n```")
+            c = SvgCalendar(None, group, 23, 30, 45, 235, 1, CalendarTheme())
         else:
             try:
                 d = arrow.get(date, locale="fr", tzinfo="Europe/Paris")
@@ -30,11 +31,9 @@ class Celcat(commands.Cog[commands.Context]):
                 await ctx.send(f"La date est invalide")
                 return
 
-            c = Calendar(d)
-            c.fetch(group)
+            c = SvgCalendar(d, group, 23, 30, 45, 235, 1, CalendarTheme())
 
-            s = "\n\n".join([str(e) for e in c.courses if e.start.date() == d.date()])
-            await ctx.send(f"```\n{s}\n```")
+        await ctx.send(file=discord.File("edt.png"))
 
 
 class Chiffer(commands.Cog[commands.Context]):

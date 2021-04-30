@@ -12,14 +12,13 @@ from urllib.parse import parse_qs
 
 class Course:
     def __init__(self, data: Dict[str, Any]) -> None:
-        self.uid: str = data["id"]
+        self.uid: str = data["uid"]
         self.start: Arrow = arrow.get(data["start"], tzinfo="Europe/Paris")
         self.end = arrow.get(data["end"], tzinfo="Europe/Paris")
-        self.category = data["eventCategory"]
-        d = [html.unescape(s) for s in data["description"].split("\r\n") if s]
-        self.name = d[2]
-        self.location = d[4] if len(d) > 4 else None
-        self.prof = d[6].replace("<br />", ", ") if len(d) > 6 else None
+        self.category = data["category"]
+        self.name = data["name"]
+        self.location = data["location"]
+        self.prof = data["prof"]
 
     def __lt__(self, other: Course) -> bool:
         return self.start < other.start
@@ -43,7 +42,7 @@ class Course:
 
 class Calendar:
     def __init__(
-        self, start: Optional[Arrow] = None, end: Optional[Arrow] = None
+            self, start: Optional[Arrow] = None, end: Optional[Arrow] = None
     ) -> None:
         self.start = arrow.now() if start is None else start
         self.end = self.start.shift(weeks=+1) if end is None else end
@@ -51,33 +50,17 @@ class Calendar:
 
     def fetch(self, group: int) -> None:
         s = requests.Session()
-        rlt = s.get("https://services-web.u-cergy.fr/calendar/LdapLogin")
-        if srvt := re.search(
-            '<input name="__RequestVerificationToken".*?value="([^"]+)"',
-            str(rlt.content),
-        ):
-            rvt = srvt.group(1)
-        else:
-            raise Exception("Didn't find verification token in login page")
-
-        rlogin = s.post(
-            "https://services-web.u-cergy.fr/calendar/LdapLogin/Logon",
-            data={
-                "Name": cfg["celcat"]["name"],
-                "Password": cfg["celcat"]["password"],
-                "__RequestVerificationToken": rvt,
-            },
-        )
-        fid = cfg["celcat"][f"group{group}"]
         rcd = s.post(
-            "https://services-web.u-cergy.fr/calendar/Home/GetCalendarData",
-            data={
+            "http://localhost:8040/getEdtBot",  # http not important since it's local
+            json={
                 "start": self.start.format("YYYY-MM-DD"),
                 "end": self.end.format("YYYY-MM-DD"),
-                "resType": "104",
-                "calView": "month",
-                "federationIds[]": fid,
+                "group": group,
             },
+            headers={
+                "Accept": "application/json",
+                "X-Session-Token": cfg["cyrel"]["key"]
+            }
         )
         calData = json.loads(rcd.content)
         for d in calData:
